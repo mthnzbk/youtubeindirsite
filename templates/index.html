@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css" >
+    <title>YouTube'dan Video İndir</title>
+</head>
+<body>
+    <div class="content">
+        <div class="logo">
+            <img id="logo" src="/static/images/youtube.png">
+        </div>
+
+        <div class="form" >
+            <form class="form-inline" action="" method="post">
+                <label><input type="text" name="video_url"/></label>
+                <button type="submit" >Video İndir</button>
+            </form>
+        </div>
+
+        <div class="reklam">
+
+        </div>
+        {% if request.method == 'POST' %}
+        <div class="video">
+            <div class="embed">
+                <iframe width="428" height="240" src="https://www.youtube.com/embed/{{ video_id }}" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <div class="indir">
+                <div class="alert alert-warning" role="alert">{{ video_title }}</div>
+                {% for video in video_streams %}
+                    <p>{{ video.resolution}} - {{ video.extension }} - {{ video.get_filesize()//1024//1024 }}Mb - <a href="{{ video.url }}" download="{{ video_title }}.{{ video.extension }}">İndir</a></p>
+                {% endfor %}
+                <!--{% for audio in audio_streams %}
+                    <p>{{audio.extension}} - {{audio.get_filesize()}} - <a href="">İndir</a></p>
+                {% endfor %}-->
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="hakkinda">
+            <ol>
+                <li><a href="https://github.com/mthnzbk">Github</a></li>
+                <li><a href="https://facebook.com/mthnzbk">Facebook</a></li>
+                <li><a href="https://twitter.com/mthnzbk">Twitter</a></li>
+            </ol>
+        </div>
+
+        <div class="footer">
+            <span>2016 &copy; </span><a href="http://metehan.us">metehan.us</a>
+        </div>
+    </div>
+
+</body>
+</html>
