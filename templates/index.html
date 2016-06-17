@@ -2,54 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css" >
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/youtube.png') }}" />
+    <link href="{{ url_for('static', filename='style.css') }}" rel='stylesheet' type='text/css' />
     <title>YouTube'dan Video İndir</title>
+    <script src="{{ url_for('static', filename='jquery.min.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+        function video_cek()
+        {
+            var url  = $("input[name=video_url]").val();
+            mail  = jQuery.trim(url);
+
+            if(url == "")
+            {
+                var newHTML = "<div style='color: red;'> * Youtube bağlantısı girmediniz! </div>";
+                document.getElementById("uyari").innerHTML=newHTML;
+            }
+
+            else
+            {
+                $.ajax(
+                {
+                    type: "POST",
+                    url:  "/getir",
+                    data : {video_url : url},
+                    success: function(sonuc){
+                        if(sonuc != "")
+                        {
+                            document.getElementById("uyari").innerHTML="";
+                            document.getElementById("sonuc").innerHTML=sonuc;
+                        }
+                    }
+                })
+            }
+        }
+    </script>
 </head>
 <body>
-    <div class="content">
-        <div class="logo">
-            <img id="logo" src="/static/images/youtube.png">
-        </div>
 
-        <div class="form" >
-            <form class="form-inline" action="" method="post">
-                <label><input type="text" name="video_url"/></label>
-                <button type="submit" >Video İndir</button>
-            </form>
-        </div>
+    <div class="image"><img src="{{ url_for('static', filename='images/youtube.png') }}"></div>
 
-        <div class="reklam">
-
-        </div>
-        {% if request.method == 'POST' %}
-        <div class="video">
-            <div class="embed">
-                <iframe width="428" height="240" src="https://www.youtube.com/embed/{{ video_id }}" frameborder="0" allowfullscreen></iframe>
-            </div>
-            <div class="indir">
-                <div class="alert alert-warning" role="alert">{{ video_title }}</div>
-                {% for video in video_streams %}
-                    <p>{{ video.resolution}} - {{ video.extension }} - {{ video.get_filesize()//1024//1024 }}Mb - <a href="{{ video.url }}" download="{{ video_title }}.{{ video.extension }}">İndir</a></p>
-                {% endfor %}
-                <!--{% for audio in audio_streams %}
-                    <p>{{audio.extension}} - {{audio.get_filesize()}} - <a href="">İndir</a></p>
-                {% endfor %}-->
-            </div>
-        </div>
-        {% endif %}
-
-        <div class="hakkinda">
-            <ol>
-                <li><a href="https://github.com/mthnzbk">Github</a></li>
-                <li><a href="https://facebook.com/mthnzbk">Facebook</a></li>
-                <li><a href="https://twitter.com/mthnzbk">Twitter</a></li>
-            </ol>
-        </div>
-
-        <div class="footer">
-            <span>2016 &copy; </span><a href="http://metehan.us">metehan.us</a>
-        </div>
+    <div class='form' >
+        <input class="video_url" type="text" name="video_url" id="video_url" placeholder="https://www.youtube.com/watch?v=QfTK_grqcos" >
+        <button onclick="video_cek()" type="submit">Video çek</button>
+        <br>
+        <span style="font-size: 10px;">* Video bağlantısını yapıştırdıktan sonra <strong>Butona</strong> basın.</span>
+        <br>
+        <div id="uyari"></div>
+    </div>
+    <div id="sonuc">
     </div>
 
+    <div class="social">
+        <a href="http://facebook.com/mthnzbk">
+            <img src="{{ url_for('static', filename='images/facebook.png') }}">
+        </a>
+        <a  href="http://github.com/mthnzbk">
+            <img src="{{ url_for('static', filename='images/github.png') }}">
+        </a>
+
+        <a href="http://twitter.com/mthnzbk">
+            <img src="{{ url_for('static', filename='images/twitter.png') }}">
+        </a>
+
+    </div>
+
+    <div class="footer">
+        <span>&copy; 2016 <a href="http://metehan.us">metehan.us</a></span>
+    </div>
 </body>
 </html>

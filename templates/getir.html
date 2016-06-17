@@ -1,0 +1,15 @@
+{% if request.method == 'POST' %}
+<div class="title">
+    <label class="label">{{ video_title }}</label>
+</div>
+
+<div class="list">
+    <table border="0"  align="center">
+        {% for video in video_streams %}
+        <tr>
+            <td style="text-align: left;">{{ video.resolution}} {{ video.extension }} {{ video.get_filesize()//1024**2 }}Mb</td><td><a class="btn btn-default btn-xs" role="button" href="{{ video.url }}&title={{ video_title|safe|urlencode }}" download>İndir</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endif %}
